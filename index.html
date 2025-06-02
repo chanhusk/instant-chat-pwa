@@ -47,6 +47,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            position: relative; /* For menu positioning */
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
@@ -67,79 +68,76 @@
                 padding-top: env(safe-area-inset-top);
                 padding-bottom: env(safe-area-inset-bottom);
             }
-             #header {
-                /* Adjust header if body padding for safe area is removed */
-                /* padding-top: calc(20px + env(safe-area-inset-top)); */
-            }
-            #input-area {
-                 /* Adjust input area if body padding for safe area is removed */
-                /* padding-bottom: calc(20px + env(safe-area-inset-bottom)); */
-            }
         }
 
 
         #header {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            padding: 20px;
-            /* Header padding adjustment for safe area, applied when app-container handles it */
-            /* padding-top: calc(20px + env(safe-area-inset-top)); */
+            padding: 15px 20px; /* Adjusted padding */
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: relative;
             flex-shrink: 0; /* Prevent header from shrinking */
+            z-index: 100; /* Ensure header is above menu backdrop */
         }
 
+        #menu-icon {
+            cursor: pointer;
+            padding: 5px; /* Easier to tap */
+            margin-right: 15px; /* Space between icon and title */
+        }
+
+        #menu-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+        
+        #header-title-group {
+            display: flex;
+            align-items: center;
+        }
+
+        #header h1 {
+            font-size: 1.3rem; /* Slightly smaller to accommodate icon */
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-icon { /* App icon, not menu icon */
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+        
         #header-controls {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
-        #clear-chat-btn {
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            color: white;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+        /* Removed clear-chat-btn styles as it's moved */
 
-        #clear-chat-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
-        }
-
-        #header h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header-icon {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-        }
-
-        #online-status {
+        #online-users-count-display { /* Was #online-status */
             display: flex;
             align-items: center;
             gap: 8px;
             font-size: 0.9rem;
             opacity: 0.9;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 5px 10px;
+            border-radius: 15px;
         }
 
         .status-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #00ff88;
+            background: #00ff88; /* Green dot */
             animation: pulse 2s infinite;
         }
 
@@ -148,6 +146,105 @@
             50% { opacity: 0.5; }
             100% { opacity: 1; }
         }
+
+        /* Side Menu Styles */
+        #side-menu {
+            position: fixed;
+            top: 0;
+            left: -300px; /* Start off-screen */
+            width: 280px; /* Menu width */
+            height: 100%;
+            background: #fff;
+            box-shadow: 4px 0px 15px rgba(0,0,0,0.2);
+            z-index: 1001; /* Above everything else except modal */
+            transition: left 0.3s ease-in-out;
+            padding-top: calc(env(safe-area-inset-top) + 20px); /* Adjust for safe area and some spacing */
+            padding-bottom: env(safe-area-inset-bottom);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        #side-menu.open {
+            left: 0; /* Slide in */
+        }
+        
+        .menu-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        #side-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1; /* Allow this section to take available space */
+            overflow-y: auto;
+        }
+
+        #side-menu ul li a, #side-menu ul li button {
+            display: block;
+            padding: 15px 20px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s ease;
+            font-size: 0.95rem;
+        }
+        #side-menu ul li button {
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        #side-menu ul li a:hover, #side-menu ul li button:hover {
+            background-color: #f7f7f7;
+        }
+        
+        #menu-online-users-section {
+            padding: 10px 20px;
+        }
+        #menu-online-users-section h3 {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        #menu-online-users-list {
+            max-height: 200px; /* Or adjust as needed */
+            overflow-y: auto;
+        }
+        #menu-online-users-list li {
+            padding: 8px 0;
+            font-size: 0.9rem;
+            color: #444;
+            border-bottom: 1px dashed #eee;
+        }
+        #menu-online-users-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Menu backdrop */
+        #menu-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000; /* Below menu, above app content */
+        }
+        #menu-backdrop.visible {
+            display: block;
+        }
+
 
         #chat-window {
             flex: 1;
@@ -283,12 +380,10 @@
 
         #input-area {
             padding: 20px;
-            /* Input area padding adjustment for safe area, applied when app-container handles it */
-            /* padding-bottom: calc(20px + env(safe-area-inset-bottom)); */
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             border-top: 1px solid rgba(102, 126, 234, 0.1);
-            flex-shrink: 0; /* Prevent input area from shrinking */
+            flex-shrink: 0; 
         }
 
         #username-display {
@@ -378,7 +473,7 @@
         #emoji-picker, #sound-picker {
             display: none;
             position: absolute;
-            bottom: calc(100% + env(safe-area-inset-bottom)); /* Adjust for safe area */
+            bottom: calc(100% + env(safe-area-inset-bottom)); 
             right: 0;
             background: white;
             border: 1px solid rgba(102, 126, 234, 0.2);
@@ -500,18 +595,7 @@
             transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
-
-        /* Original media query for responsiveness on smaller browser windows */
-        /* This will now also affect how it looks if not launched in standalone PWA mode */
-        @media (max-width: 480px) {
-            /* Ensure #app-container takes full width/height if not in standalone PWA mode */
-            /* but on small screens */
-            #app-container:not(:fullscreen) { /* Check if this selector logic is needed */
-                 /* width: 100%; */
-                 /* height: 100vh; */
-                 /* border-radius: 0; */
-            }
-        }
+        
     </style>
 </head>
 <body>
@@ -525,18 +609,38 @@
     </div>
 
     <div id="app-container">
+        <div id="side-menu">
+            <div class="menu-header">Menu</div>
+            <ul>
+                <li><button id="menu-clear-chat-btn">🧹 Clear Conversation</button></li>
+                </ul>
+            <div id="menu-online-users-section">
+                <h3>Online Users</h3>
+                <ul id="menu-online-users-list">
+                    <li>No one is currently online.</li>
+                </ul>
+            </div>
+        </div>
+        <div id="menu-backdrop"></div>
+
+
         <div id="header">
-            <h1>
-                <svg class="header-icon" viewBox="0 0 24 24">
-                    <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
-                </svg>
-                Instant Chat
-            </h1>
+            <div id="header-title-group">
+                <div id="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </div>
+                <h1>
+                    <svg class="header-icon" viewBox="0 0 24 24">
+                        <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    Instant Chat
+                </h1>
+            </div>
             <div id="header-controls">
-                <button id="clear-chat-btn">Clear Chat</button>
-                <div id="online-status">
-                    <div class="status-dot"></div>
-                    Online
+                <div id="online-users-count-display"> <div class="status-dot"></div>
+                    <span id="online-count-text">0 Online</span>
                 </div>
             </div>
         </div>
@@ -608,12 +712,12 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-        import { getDatabase, ref, push, serverTimestamp, orderByChild, limitToLast, onChildAdded, query, set, onValue } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
+        import { getDatabase, ref, push, serverTimestamp, orderByChild, limitToLast, onChildAdded, query, set, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyCkVTJhYIp0tC1lPTosvblH-Z_pDRfOnWw", // Consider using environment variables or a more secure way for API keys
+            apiKey: "AIzaSyCkVTJhYIp0tC1lPTosvblH-Z_pDRfOnWw", // Consider using environment variables
             authDomain: "my-instant-messenger.firebaseapp.com",
             projectId: "my-instant-messenger",
             storageBucket: "my-instant-messenger.firebasestorage.app",
@@ -646,14 +750,28 @@
         const emojiPicker = document.getElementById('emoji-picker');
         const soundBtn = document.getElementById('sound-btn');
         const soundPicker = document.getElementById('sound-picker');
-        const clearChatBtn = document.getElementById('clear-chat-btn');
         const currentUsernameSpan = document.getElementById('current-username');
         const nameModal = document.getElementById('name-modal');
         const nameModalInput = document.getElementById('name-modal-input');
         const nameModalBtn = document.getElementById('name-modal-btn');
 
+        // New Menu DOM Elements
+        const menuIcon = document.getElementById('menu-icon');
+        const sideMenu = document.getElementById('side-menu');
+        const menuBackdrop = document.getElementById('menu-backdrop');
+        const menuClearChatBtn = document.getElementById('menu-clear-chat-btn');
+        const menuOnlineUsersList = document.getElementById('menu-online-users-list');
+        const onlineCountText = document.getElementById('online-count-text');
+
+
         // State
         let currentUsername = "";
+        let userSessionId = sessionStorage.getItem('chatUserSessionId'); // For presence
+        if (!userSessionId) {
+            userSessionId = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+            sessionStorage.setItem('chatUserSessionId', userSessionId);
+        }
+        console.log("Current userSessionId:", userSessionId); // <-- DEBUGGING LOG for userSessionId
         let messages = [];
         let currentSoundType = "ding";
         let typingTimeout;
@@ -662,7 +780,6 @@
         // Audio Context for generating sounds
         let audioContext;
         
-        // Initialize audio context
         function initAudioContext() {
             if (!audioContext && (window.AudioContext || window.webkitAudioContext)) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -671,22 +788,18 @@
             }
         }
 
-        // Sound generation functions
+        // --- Sound generation functions (playBubbleSound, playChimeSound, etc. - unchanged) ---
         function playBubbleSound() {
             initAudioContext();
             if (!audioContext) return;
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
-            
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
-            
             oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
             oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
-            
             gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-            
             oscillator.start(audioContext.currentTime);
             oscillator.stop(audioContext.currentTime + 0.3);
         }
@@ -695,22 +808,17 @@
             initAudioContext();
             if (!audioContext) return;
             const frequencies = [523.25, 659.25, 783.99]; // C5, E5, G5
-            
             frequencies.forEach((freq, index) => {
                 const oscillator = audioContext.createOscillator();
                 const gainNode = audioContext.createGain();
-                
                 oscillator.connect(gainNode);
                 gainNode.connect(audioContext.destination);
-                
                 oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
                 oscillator.type = 'sine';
-                
                 const startTime = audioContext.currentTime + (index * 0.1);
                 gainNode.gain.setValueAtTime(0, startTime);
                 gainNode.gain.linearRampToValueAtTime(0.2, startTime + 0.05);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + 0.8);
-                
                 oscillator.start(startTime);
                 oscillator.stop(startTime + 0.8);
             });
@@ -721,16 +829,12 @@
             if (!audioContext) return;
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
-            
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
-            
             oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
             oscillator.type = 'sine';
-            
             gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
-            
             oscillator.start(audioContext.currentTime);
             oscillator.stop(audioContext.currentTime + 0.15);
         }
@@ -740,18 +844,14 @@
             if (!audioContext) return;
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
-            
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
-            
             oscillator.frequency.setValueAtTime(2000, audioContext.currentTime);
             oscillator.frequency.linearRampToValueAtTime(2500, audioContext.currentTime + 0.2);
             oscillator.type = 'sine';
-            
             gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
             gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.1);
             gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
-            
             oscillator.start(audioContext.currentTime);
             oscillator.stop(audioContext.currentTime + 0.4);
         }
@@ -763,6 +863,7 @@
                 audioElement.play().catch(e => console.log('Ding sound play failed:', e));
             }
         }
+
 
         // Name modal functionality
         function showNameModal() {
@@ -786,13 +887,99 @@
                 currentUsernameSpan.textContent = currentUsername;
                 hideNameModal();
                 initializeChat();
-                 // Attempt to initialize AudioContext after user interaction
-                initAudioContext();
+                initAudioContext(); 
+                setupPresenceSystem(); 
             } else {
                 alert('Please enter a valid name');
                 nameModalInput.focus();
             }
         }
+        
+        // Presence System
+        // ENHANCED setupPresenceSystem with logging
+        function setupPresenceSystem() {
+            if (!database || !userSessionId || !currentUsername) {
+                console.warn("Cannot setup presence: missing database, userSessionId, or currentUsername.", {
+                    database: !!database, 
+                    userSessionId: userSessionId,
+                    currentUsername: currentUsername
+                }); 
+                return;
+            }
+
+            const userStatusRef = ref(database, 'onlineUsers/' + userSessionId);
+            const connectedRef = ref(database, '.info/connected');
+
+            onValue(connectedRef, (snap) => {
+                if (snap.val() === true) {
+                    const presenceData = {
+                        username: currentUsername,
+                        onlineAt: serverTimestamp(),
+                        sessionId: userSessionId 
+                    };
+                    set(userStatusRef, presenceData)
+                        .then(() => console.log(currentUsername + " (" + userSessionId + ") is online."))
+                        .catch(err => console.error("Failed to set online status for " + userSessionId + ":", err));
+
+                    onDisconnect(userStatusRef).remove()
+                        .then(() => console.log("onDisconnect set for " + userSessionId))
+                        .catch(err => console.error("Failed to set onDisconnect for " + userSessionId + ":", err));
+                } else {
+                    console.log(currentUsername + " (" + userSessionId + ") is offline or connection lost before setting presence.");
+                }
+            });
+        }
+
+        // ENHANCED listenForOnlineUsers with extensive logging
+        function listenForOnlineUsers() {
+            if (!database) {
+                console.warn("Database not available for listenForOnlineUsers");
+                return;
+            }
+            const onlineUsersDbRef = ref(database, 'onlineUsers');
+            console.log("Setting up listener for /onlineUsers path."); // Path confirmation
+
+            onValue(onlineUsersDbRef, (snapshot) => {
+                console.log("Firebase /onlineUsers snapshot received:", snapshot.val()); // Log the raw snapshot value
+                const onlineUsersData = snapshot.val() || {};
+                const usersArray = Object.values(onlineUsersData);
+                const onlineCount = usersArray.length;
+                console.log("Parsed online users array:", usersArray, "Count:", onlineCount);
+
+                if (onlineCountText) {
+                    onlineCountText.textContent = `${onlineCount} Online`;
+                }
+
+                if (menuOnlineUsersList) {
+                    menuOnlineUsersList.innerHTML = ''; // Clear previous list
+                    if (onlineCount > 0) {
+                        usersArray.forEach(user => {
+                            if (user && typeof user === 'object' && user.username) {
+                                console.log("Processing user for list:", user.username, "(Session: ", user.sessionId, ")");
+                                const userLi = document.createElement('li');
+                                userLi.textContent = user.username;
+                                if (user.sessionId === userSessionId) {
+                                    userLi.textContent += " (You)";
+                                    userLi.style.fontWeight = 'bold';
+                                    userLi.style.color = '#667eea';
+                                }
+                                menuOnlineUsersList.appendChild(userLi);
+                            } else {
+                                console.warn("Skipping invalid user object in onlineUsersData:", user);
+                            }
+                        });
+                    } else {
+                        console.log("No users currently listed in onlineUsersData.");
+                        const noUsersLi = document.createElement('li');
+                        noUsersLi.textContent = 'No one is currently online.';
+                        menuOnlineUsersList.appendChild(noUsersLi);
+                    }
+                }
+            }, (error) => { // Error callback for the onValue listener
+                console.error("Firebase error listening to /onlineUsers:", error);
+            });
+        }
+
 
         // Message functions
         function sanitizeText(text) {
@@ -830,10 +1017,8 @@
         }
 
         function initializeChat() {
-            // Initialize welcome messages
             addStatusMessage('Welcome to Instant Chat! 🎉');
             
-            // Firebase Data Listener
             if (database) {
                 const messagesDbRef = ref(database, 'messages');
                 const messagesQuery = query(messagesDbRef, orderByChild('timestamp'), limitToLast(50));
@@ -847,16 +1032,15 @@
                     }
                 });
 
-                // Listen for when the entire messages node is cleared
                 onValue(messagesDbRef, (snapshot) => {
                     if (!snapshot.exists()) {
-                        // Messages have been cleared - clear the local display
                         messagesContainer.innerHTML = '';
                         addStatusMessage('Chat cleared by administrator');
                     }
                 });
                 
                 addStatusMessage('Connected to real-time chat!');
+                listenForOnlineUsers(); 
             } else {
                 addStatusMessage('Error: Could not connect to Firebase. Check console for details.');
             }
@@ -865,7 +1049,7 @@
         }
 
         function displayMessage(msgId, sender, text, timestamp, isMyMessage) {
-            if (document.getElementById(msgId)) return; // Avoid duplicate messages
+            if (document.getElementById(msgId)) return; 
 
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message');
@@ -878,7 +1062,7 @@
 
             const textDiv = document.createElement('div');
             textDiv.classList.add('text');
-            textDiv.innerHTML = sanitizeText(text); // Sanitize HTML before displaying
+            textDiv.innerHTML = sanitizeText(text); 
 
             const timeDiv = document.createElement('div');
             timeDiv.classList.add('timestamp');
@@ -895,11 +1079,9 @@
             messageDiv.appendChild(timeDiv);
             
             messagesContainer.appendChild(messageDiv);
-            // Scroll to bottom smoothly
             chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
             
-            // Play notification sound for messages from others
-            if (!isMyMessage && document.visibilityState === 'visible') { // Only play if tab is active
+            if (!isMyMessage && document.visibilityState === 'visible') { 
                 playNotificationSound();
             }
         }
@@ -930,32 +1112,19 @@
             if (currentSoundType === 'off') return;
             
             try {
-                 // Ensure AudioContext is initialized (especially important on mobile)
                 if (!audioContext && currentSoundType !== 'ding') {
-                    initAudioContext(); // Try to init if not already
+                    initAudioContext(); 
                     if (!audioContext) {
                         console.warn("AudioContext not available for sound:", currentSoundType);
-                        return; // Still not available, can't play web audio
+                        return; 
                     }
                 }
-
-
                 switch (currentSoundType) {
-                    case 'ding':
-                        playDingSound();
-                        break;
-                    case 'bubble':
-                        playBubbleSound();
-                        break;
-                    case 'chime':
-                        playChimeSound();
-                        break;
-                    case 'ping':
-                        playPingSound();
-                        break;
-                    case 'whistle':
-                        playWhistleSound();
-                        break;
+                    case 'ding': playDingSound(); break;
+                    case 'bubble': playBubbleSound(); break;
+                    case 'chime': playChimeSound(); break;
+                    case 'ping': playPingSound(); break;
+                    case 'whistle': playWhistleSound(); break;
                 }
             } catch (e) {
                 console.log('Sound play failed:', e);
@@ -964,7 +1133,7 @@
 
         function clearChat() {
             const pin = prompt('Enter PIN to clear chat for all users:');
-            if (pin === '5855') { // Keep PIN mechanism as is
+            if (pin === '5855') { 
                 if (confirm('This will clear the chat for ALL users. Are you sure?')) {
                     if (!database) {
                         alert("Database not initialized. Cannot clear chat.");
@@ -975,7 +1144,7 @@
                     set(messagesDbRef, null)
                         .then(() => {
                             console.log('Chat cleared successfully');
-                            messagesContainer.innerHTML = ''; // Clear local display
+                            messagesContainer.innerHTML = ''; 
                             addStatusMessage('Chat cleared by administrator');
                         })
                         .catch(error => {
@@ -1005,9 +1174,14 @@
             soundBtn.textContent = `${soundNames[soundType] || '🔊'} Sounds`;
             
             if (soundType !== 'off') {
-                 // Delay slightly to ensure UI updates before sound plays
                 setTimeout(() => playNotificationSound(), 100);
             }
+        }
+
+        // Menu Toggle Logic
+        function toggleMenu() {
+            sideMenu.classList.toggle('open');
+            menuBackdrop.classList.toggle('visible');
         }
 
         // Event Listeners
@@ -1022,14 +1196,11 @@
 
         messageInput.addEventListener('input', function() {
             adjustTextareaHeight();
-            // Typing indicator logic (simplified for this example)
             clearTimeout(typingTimeout);
             if (!isTyping) {
-                // In a real app, you would send a "typing" event to Firebase
                 isTyping = true; 
             }
             typingTimeout = setTimeout(() => {
-                // Send "stopped typing" event
                 isTyping = false;
             }, 1000);
         });
@@ -1046,23 +1217,25 @@
             e.stopPropagation();
             const isPickerVisible = emojiPicker.style.display === 'grid';
             emojiPicker.style.display = isPickerVisible ? 'none' : 'grid';
-            soundPicker.style.display = 'none'; // Close sound picker
+            soundPicker.style.display = 'none'; 
         });
 
         soundBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             const isPickerVisible = soundPicker.style.display === 'grid';
             soundPicker.style.display = isPickerVisible ? 'none' : 'grid';
-            emojiPicker.style.display = 'none'; // Close emoji picker
+            emojiPicker.style.display = 'none'; 
         });
 
         document.addEventListener('click', function(e) {
-            // Close pickers if click is outside
             if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
                 emojiPicker.style.display = 'none';
             }
             if (!soundPicker.contains(e.target) && e.target !== soundBtn) {
                 soundPicker.style.display = 'none';
+            }
+            if (sideMenu.classList.contains('open') && !sideMenu.contains(e.target) && e.target !== menuIcon && !menuIcon.contains(e.target)) {
+                 toggleMenu();
             }
         });
 
@@ -1085,20 +1258,31 @@
             });
         });
 
-        clearChatBtn.addEventListener('click', clearChat);
+        // Menu Event Listeners
+        menuIcon.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            toggleMenu();
+        });
+        menuBackdrop.addEventListener('click', toggleMenu);
+
+        menuClearChatBtn.addEventListener('click', () => {
+            clearChat();
+            toggleMenu(); 
+        });
+
 
         // Initialize the app
         const savedSoundType = localStorage.getItem('messengerSoundType') || 'ding';
         setSoundType(savedSoundType);
         
-        showNameModal();
+        showNameModal(); 
         
-        console.log("Enhanced Messenger PWA initialized!");
+        console.log("Enhanced Messenger PWA with Menu and Presence (with debug logs) initialized!");
 
         // Service Worker Registration
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js') // Path relative to HTML file
+            navigator.serviceWorker.register('./sw.js')
               .then(registration => {
                 console.log('ServiceWorker registration successful with scope: ', registration.scope);
               })
@@ -1107,6 +1291,12 @@
               });
           });
         }
+
+        window.addEventListener('beforeunload', () => {
+            if (database && userSessionId) {
+                console.log("User (" + userSessionId + ") leaving, onDisconnect should handle presence removal.");
+            }
+        });
 
     </script>
 </body>
