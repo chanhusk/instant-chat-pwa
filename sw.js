@@ -1,4 +1,4 @@
-const CACHE_NAME = 'instant-chat-cache-v1'; // Consider incrementing cache name to v2 if you want to ensure fresh cache
+const CACHE_NAME = 'instant-chat-cache-v2'; // Consider incrementing cache name to v2 if you want to ensure fresh cache
 const urlsToCache = [
   './', // Caches the root, which will now be your index.html
   './index.html', // Explicitly cache index.html
