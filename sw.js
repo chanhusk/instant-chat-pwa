@@ -1,7 +1,7 @@
-const CACHE_NAME = 'instant-chat-cache-v1';
+const CACHE_NAME = 'instant-chat-cache-v1'; // Consider incrementing cache name to v2 if you want to ensure fresh cache
 const urlsToCache = [
-  './', // Caches the root, often equivalent to index or start_url if configured
-  './messenger_pwa.html',
+  './', // Caches the root, which will now be your index.html
+  './index.html', // Explicitly cache index.html
   // Add paths to your icons if you want them pre-cached
   './icons/icon-192x192.png',
   './icons/icon-512x512.png',
@@ -34,7 +34,6 @@ self.addEventListener('fetch', event => {
   }
 
   // For Firebase and other external resources, always fetch from network.
-  // You might need to adjust this if Firebase assets should be cached or have specific caching headers.
   if (event.request.url.includes('firebase') || event.request.url.includes('gstatic')) {
     event.respondWith(fetch(event.request));
     return;
@@ -77,7 +76,7 @@ self.addEventListener('fetch', event => {
 
 // Update a service worker
 self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
+  const cacheWhitelist = [CACHE_NAME]; // If you changed CACHE_NAME to '...v2', update it here too
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(

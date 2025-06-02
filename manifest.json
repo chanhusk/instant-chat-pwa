@@ -2,7 +2,7 @@
   "name": "Instant Chat",
   "short_name": "ChatApp",
   "description": "A simple and instant chat application.",
-  "start_url": "/messenger_pwa.html",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#667eea",
